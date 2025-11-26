@@ -1,4 +1,6 @@
-﻿using ShopList.Gui.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ShopList.Gui.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,12 +8,14 @@ using System.Collections.ObjectModel;
 
 namespace ShopList.Gui.ViewModels
 {
-    public partial class ShopListViewModel :ObservableObject 
+    public partial class ShopListViewModel :ObservableObject
     {
         [ObservableProperty]
         private string _nombreDelArticulo = string.Empty;
         [ObservableProperty]
         private int _cantidadAComprar = 1;
+        [ObservableProperty]
+        private Item? _ProductoSeleccionado;
 
   
         public ObservableCollection<Item> Items { get; }
@@ -22,6 +26,14 @@ namespace ShopList.Gui.ViewModels
         {
             Items = new ObservableCollection<Item>();
             CargarDatos();
+            if(Items.Count > 0)
+            {
+                ProductoSeleccionado = Items[0];
+            }
+            else
+            {
+                ProductoSeleccionado = null;
+            }
              
         }
 
@@ -50,7 +62,31 @@ namespace ShopList.Gui.ViewModels
         [RelayCommand]
         public void EliminarShopListItem()
         {
+            if (ProductoSeleccionado != null)
+            {
+                var indice = Items.IndexOf(ProductoSeleccionado);
+                Item? nuevoSeleccionado;
+                if (Items.Count > 1)
 
+                {
+                    if (indice < Items.Count - 1)
+                    {
+                        nuevoSeleccionado = Items[indice + 1];
+                    }
+                    else
+                    {
+                        nuevoSeleccionado= Items[indice - 1];
+                    }
+                }
+                else
+                {
+                    nuevoSeleccionado = null;
+                }
+                Items.Remove(ProductoSeleccionado);
+                ProductoSeleccionado = nuevoSeleccionado;
+            }
+               
+            
         }
 
         private void CargarDatos()
