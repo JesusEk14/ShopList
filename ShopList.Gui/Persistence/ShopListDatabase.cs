@@ -35,7 +35,7 @@ namespace ShopList.Gui.Persistence
         public async Task<IEnumerable<Item>> GetAllItemsAsync()
         {
             await InitAsync();
-            return await _connection!.Table<Item>()
+            return await _connection.Table<Item>()
                 .ToListAsync();
         }
 
